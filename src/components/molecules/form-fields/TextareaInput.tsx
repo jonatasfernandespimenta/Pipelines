@@ -1,7 +1,7 @@
 import { BaseFieldProps, getCommonInputProps } from "./types";
 
-export default function TextareaInput({ field, value, onChange }: BaseFieldProps) {
-  const commonProps = getCommonInputProps(field);
+export default function TextareaInput({ field, value, onChange, disabled }: BaseFieldProps) {
+  const commonProps = getCommonInputProps(field, disabled);
 
   return (
     <textarea

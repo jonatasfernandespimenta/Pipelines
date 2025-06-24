@@ -5,3 +5,5 @@ export { default as EmptyState } from './EmptyState';
 export { default as AddColumnButton } from './AddColumnButton';
 export { default as Modal } from './Modal';
 export { default as CreateCardForm } from './CreateCardForm';
+export { default as DraggableFormField } from './DraggableFormField';
+export { default as DropZone } from './DropZone';
