@@ -16,7 +16,7 @@ interface ColumnProps {
   cards: CardItem[]
   onCardDrop: (card: CardItem) => void
   onCardRemove: (card: CardItem) => void
-  onCreateCard?: (cardData: { text: string }) => void
+  onCreateCard?: (cardData: Record<string, any>) => void
   name: string
   canCreateCard?: boolean
 }

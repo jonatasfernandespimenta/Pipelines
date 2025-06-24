@@ -54,10 +54,12 @@ export function Pipeline() {
     moveCardToColumn(card, "backlog")
   }
 
-  const createCard = (columnId: string, cardData: { text: string }) => {
+  const createCard = (columnId: string, cardData: Record<string, any>) => {
+    const cardText = cardData.taskName || cardData.taskDescription || Object.values(cardData).find(value => typeof value === 'string' && value.trim()) || 'New Card';
+
     const newCard: CardItem = {
-      id: Date.now().toString(), // Simple ID generation - in real app use UUID
-      text: cardData.text,
+      id: Date.now().toString(),
+      text: cardText,
       columnId: columnId
     }
     setCards(prev => [...prev, newCard])
@@ -66,7 +68,6 @@ export function Pipeline() {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return
 
-    // Check if any modal is open
     if (document.body.hasAttribute("data-modal-open")) return
 
     const target = e.target as HTMLElement
@@ -83,7 +84,6 @@ export function Pipeline() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isScrolling || !scrollContainerRef.current) return
-    // Stop scrolling if a modal opens during drag
     if (document.body.hasAttribute("data-modal-open")) {
       setIsScrolling(false)
       document.body.style.cursor = 'default'
@@ -92,7 +92,7 @@ export function Pipeline() {
     }
     e.preventDefault()
     const x = e.pageX - scrollContainerRef.current.offsetLeft
-    const walk = (x - startX) * 2 // Scroll speed multiplier
+    const walk = (x - startX) * 2
     scrollContainerRef.current.scrollLeft = scrollLeft - walk
   }
 

@@ -13,13 +13,13 @@ interface ColumnHeaderProps {
   count: number;
   className?: string;
   canCreateCard?: boolean;
-  onCreateCard?: (cardData: { text: string }) => void;
+  onCreateCard?: (cardData: Record<string, any>) => void;
 }
 
 export default function ColumnHeader({ title, count, className, canCreateCard, onCreateCard }: ColumnHeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCreateCard = (cardData: { text: string }) => {
+  const handleCreateCard = (cardData: Record<string, any>) => {
     onCreateCard?.(cardData);
     setIsModalOpen(false);
   };
@@ -56,7 +56,6 @@ export default function ColumnHeader({ title, count, className, canCreateCard, o
         }
       </div>
 
-      {/* Create Card Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

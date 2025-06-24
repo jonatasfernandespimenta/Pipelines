@@ -3,44 +3,77 @@
 import { useState } from "react";
 import Button from "../atoms/Button";
 import Text from "../atoms/Text";
+import { initialForm } from "@/mocks/form";
+import { FieldType } from "@/types/FieldType";
+import { FieldRenderer } from "./form-fields";
 
-interface CreateCardFormProps {
-  onSubmit: (cardData: { text: string }) => void;
-  onCancel: () => void;
+interface FormField {
+  fieldType: FieldType;
+  fieldName: string;
+  fieldLabel: string;
+  fieldPlaceholder: string;
+  fieldRequired: boolean;
+  fieldOptions: string[];
 }
 
-export default function CreateCardForm({ onSubmit, onCancel }: CreateCardFormProps) {
-  const [cardText, setCardText] = useState("");
+interface CreateCardFormProps {
+  onSubmit: (cardData: Record<string, any>) => void;
+  onCancel: () => void;
+  formFields?: FormField[];
+}
+
+export default function CreateCardForm({ onSubmit, onCancel, formFields = initialForm.fields }: CreateCardFormProps) {
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (fieldName: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: value
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!cardText.trim()) return;
+
+    const requiredFields = formFields.filter(field => field.fieldRequired);
+    const missingFields = requiredFields.filter(field => !formData[field.fieldName]?.toString().trim());
+
+    if (missingFields.length > 0) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      onSubmit({ text: cardText.trim() });
-      setCardText("");
+      onSubmit(formData);
+      setFormData({});
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const isFormValid = () => {
+    const requiredFields = formFields.filter(field => field.fieldRequired);
+    return requiredFields.every(field => formData[field.fieldName]?.toString().trim());
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Text variant="label" className="block mb-2">
-          Card Title
-        </Text>
-        <textarea
-          value={cardText}
-          onChange={(e) => setCardText(e.target.value)}
-          placeholder="Enter card description..."
-          className="w-full p-3 bg-gray-04 border border-gray-03 rounded-lg text-white placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-cx-blue focus:border-transparent"
-          rows={3}
-          autoFocus
-        />
-      </div>
+      {formFields.map((field) => (
+        <div key={field.fieldName} className="mb-2">
+          {field.fieldType !== FieldType.Checkbox && (
+            <Text variant="label" className="block mb-2">
+              {field.fieldLabel}
+              {field.fieldRequired && <span className="text-support-error ml-1">*</span>}
+            </Text>
+          )}
+          <FieldRenderer
+            field={field}
+            value={formData[field.fieldName]}
+            onChange={handleInputChange}
+          />
+        </div>
+      ))}
 
       <div className="flex gap-2 justify-end">
         <Button
@@ -53,7 +86,7 @@ export default function CreateCardForm({ onSubmit, onCancel }: CreateCardFormPro
         </Button>
         <Button
           variant="primary"
-          disabled={!cardText.trim() || isSubmitting}
+          disabled={!isFormValid() || isSubmitting}
           type="submit"
         >
           {isSubmitting ? "Creating..." : "Create Card"}
