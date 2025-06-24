@@ -13,12 +13,17 @@ interface CardItem {
 }
 
 interface ColumnProps {
+  columnId: string
   cards: CardItem[]
   onCardDrop: (card: CardItem) => void
   onCardRemove: (card: CardItem) => void
   onCreateCard?: (cardData: Record<string, any>) => void
   name: string
   canCreateCard?: boolean
+  onMoveLeft: () => void
+  onMoveRight: () => void
+  canMoveLeft: boolean
+  canMoveRight: boolean
 }
 
 const columnStyle = tv({
@@ -46,7 +51,19 @@ const columnStyle = tv({
   },
 });
 
-export default function Column({ cards, onCardDrop, onCardRemove, onCreateCard, name, canCreateCard }: ColumnProps) {
+export default function Column({
+  columnId,
+  cards,
+  onCardDrop,
+  onCardRemove,
+  onCreateCard,
+  name,
+  canCreateCard,
+  onMoveLeft,
+  onMoveRight,
+  canMoveLeft,
+  canMoveRight
+}: ColumnProps) {
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: ItemTypes.CARD,
     drop: (item: CardItem, monitor) => {
@@ -65,6 +82,10 @@ export default function Column({ cards, onCardDrop, onCardRemove, onCreateCard, 
         title={name}
         count={cards.length}
         onCreateCard={onCreateCard}
+        onMoveLeft={onMoveLeft}
+        onMoveRight={onMoveRight}
+        canMoveLeft={canMoveLeft}
+        canMoveRight={canMoveRight}
       />
       <div
         ref={dropRef as any}

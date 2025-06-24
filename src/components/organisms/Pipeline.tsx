@@ -87,6 +87,44 @@ export function Pipeline() {
       pauseOnHover: true,
       draggable: true,
     });
+  }; const moveColumnLeft = (columnId: string) => {
+    setColumns(prev => {
+      const currentIndex = prev.findIndex(col => col.id === columnId);
+      if (currentIndex <= 0) return prev;
+
+      const columnName = prev[currentIndex].name;
+      const newColumns = [...prev];
+      const temp = newColumns[currentIndex];
+      newColumns[currentIndex] = newColumns[currentIndex - 1];
+      newColumns[currentIndex - 1] = temp;
+
+      toast.info(`Coluna "${columnName}" movida para a esquerda!`, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+
+      return newColumns;
+    });
+  };
+
+  const moveColumnRight = (columnId: string) => {
+    setColumns(prev => {
+      const currentIndex = prev.findIndex(col => col.id === columnId);
+      if (currentIndex >= prev.length - 1) return prev;
+
+      const columnName = prev[currentIndex].name;
+      const newColumns = [...prev];
+      const temp = newColumns[currentIndex];
+      newColumns[currentIndex] = newColumns[currentIndex + 1];
+      newColumns[currentIndex + 1] = temp;
+
+      toast.info(`Coluna "${columnName}" movida para a direita!`, {
+        position: "top-right",
+        autoClose: 1500,
+      });
+
+      return newColumns;
+    });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -163,15 +201,20 @@ export function Pipeline() {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
       >
-        {columns.map(column => (
+        {columns.map((column, index) => (
           <Column
             key={column.id}
+            columnId={column.id}
             cards={getCardsForColumn(column.id)}
             onCardDrop={(card) => moveCardToColumn(card, column.id)}
             onCardRemove={moveCardToBacklog}
             onCreateCard={(cardData) => createCard(column.id, cardData)}
             name={column.name}
             canCreateCard={column.canCreateCard}
+            onMoveLeft={() => moveColumnLeft(column.id)}
+            onMoveRight={() => moveColumnRight(column.id)}
+            canMoveLeft={index > 0}
+            canMoveRight={index < columns.length - 1}
           />
         ))}
 
