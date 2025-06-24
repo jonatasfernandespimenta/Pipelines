@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 interface ButtonProps {
   children: ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "danger" | "icon";
+  variant?: "primary" | "secondary" | "danger" | "success" | "icon";
   size?: "small" | "medium" | "large";
   className?: string;
   disabled?: boolean;
@@ -20,6 +20,7 @@ const buttonStyles = tv({
       primary: "bg-cx-blue text-gray-04 hover:bg-cx-blue/90 focus:ring-cx-blue",
       secondary: "bg-gray-04 text-gray-500 border border-gray-03 hover:bg-gray-03 focus:ring-gray-03",
       danger: "bg-support-error text-white hover:bg-support-error/90 focus:ring-support-error",
+      success: "bg-support-success text-white hover:bg-support-success/90 focus:ring-support-success",
       icon: "bg-support-error text-white rounded-full hover:bg-support-error/90 focus:ring-support-error",
     },
     size: {

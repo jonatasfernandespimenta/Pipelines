@@ -5,6 +5,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "@/utils/Contants";
 import { FieldRenderer } from "./form-fields";
 import { FieldType } from "@/types/FieldType";
+import { IconButton } from "../atoms";
 
 interface FormField {
   id: string;
@@ -92,20 +93,22 @@ export default function DraggableFormField({
       className="relative group"
     >
       <div className="flex absolute -top-2 -right-2 flex-row items-center justify-between gap-1">
-        <button
+        <IconButton
+          icon="✎"
+          variant="primary"
+          size="small"
           onClick={() => onEdit(field.id)}
-          className="w-6 h-6 bg-cx-blue text-white rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs z-10"
-          title="Editar campo"
-        >
-          ✎
-        </button>
-        <button
+          tooltip="Editar campo"
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+        />
+        <IconButton
+          icon="×"
+          variant="danger"
+          size="small"
           onClick={() => onRemove(field.id)}
-          className="w-6 h-6 bg-support-error text-white rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs z-10"
-          title="Remover campo"
-        >
-          ×
-        </button>
+          tooltip="Remover campo"
+          className="opacity-0 group-hover:opacity-100 transition-opacity"
+        />
         {/* Drag handle */}
         <div className="opacity-0 group-hover:opacity-100 transition-opacity cursor-move z-10" title="Arrastar campo">
           <div className="w-4 h-4 text-gray-400 hover:text-white">

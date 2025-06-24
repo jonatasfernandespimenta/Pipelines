@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react"
 import Card from "../atoms/Card"
 import Column from "./Column"
 import AddColumnButton from "../molecules/AddColumnButton"
+import AddColumnForm from "../molecules/AddColumnForm"
+import { toast } from 'react-toastify'
 
 interface CardItem {
   id: string
@@ -16,6 +18,7 @@ interface ColumnData {
   id: string
   name: string
   canCreateCard?: boolean
+  isFinalStep?: boolean
 }
 
 export function Pipeline() {
@@ -23,11 +26,12 @@ export function Pipeline() {
   const [isScrolling, setIsScrolling] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
+  const [isAddColumnFormOpen, setIsAddColumnFormOpen] = useState(false)
 
-  const [columns] = useState<ColumnData[]>([
-    { id: "backlog", name: "Backlog", canCreateCard: true },
-    { id: "in_progress", name: "In Progress" },
-    { id: "done", name: "Done" }
+  const [columns, setColumns] = useState<ColumnData[]>([
+    { id: "backlog", name: "Backlog", canCreateCard: true, isFinalStep: false },
+    { id: "in_progress", name: "In Progress", canCreateCard: false, isFinalStep: false },
+    { id: "done", name: "Done", canCreateCard: false, isFinalStep: true }
   ])
 
   const [cards, setCards] = useState<CardItem[]>([
@@ -64,6 +68,26 @@ export function Pipeline() {
     }
     setCards(prev => [...prev, newCard])
   }
+
+  const addColumn = (columnData: { columnName: string; isFinalStep: boolean; canCreateCards: boolean }) => {
+    const newColumn: ColumnData = {
+      id: `column-${Date.now()}`,
+      name: columnData.columnName,
+      canCreateCard: columnData.canCreateCards,
+      isFinalStep: columnData.isFinalStep,
+    };
+
+    setColumns(prev => [...prev, newColumn]);
+
+    toast.success(`Coluna "${columnData.columnName}" criada com sucesso!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return
@@ -116,41 +140,49 @@ export function Pipeline() {
   }, [])
 
   return (
-    <div
-      ref={scrollContainerRef}
-      style={{
-        display: "flex",
-        gap: "20px",
-        padding: "20px",
-        backgroundColor: "#1c1c1c",
-        overflowX: "auto",
-        overflowY: "hidden",
-        cursor: isScrolling ? 'grabbing' : 'grab',
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE/Edge
-        userSelect: isScrolling ? 'none' : 'auto',
-        WebkitUserSelect: isScrolling ? 'none' : 'auto', // Safari/Chrome
-        MozUserSelect: isScrolling ? 'none' : 'auto', // Firefox
-      }}
-      className="scrollbar-hide"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
-      {columns.map(column => (
-        <Column
-          key={column.id}
-          cards={getCardsForColumn(column.id)}
-          onCardDrop={(card) => moveCardToColumn(card, column.id)}
-          onCardRemove={moveCardToBacklog}
-          onCreateCard={(cardData) => createCard(column.id, cardData)}
-          name={column.name}
-          canCreateCard={column.canCreateCard}
-        />
-      ))}
+    <>
+      <div
+        ref={scrollContainerRef}
+        style={{
+          display: "flex",
+          gap: "20px",
+          padding: "20px",
+          backgroundColor: "#1c1c1c",
+          overflowX: "auto",
+          overflowY: "hidden",
+          cursor: isScrolling ? 'grabbing' : 'grab',
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
+          userSelect: isScrolling ? 'none' : 'auto',
+          WebkitUserSelect: isScrolling ? 'none' : 'auto', // Safari/Chrome
+          MozUserSelect: isScrolling ? 'none' : 'auto', // Firefox
+        }}
+        className="scrollbar-hide"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+      >
+        {columns.map(column => (
+          <Column
+            key={column.id}
+            cards={getCardsForColumn(column.id)}
+            onCardDrop={(card) => moveCardToColumn(card, column.id)}
+            onCardRemove={moveCardToBacklog}
+            onCreateCard={(cardData) => createCard(column.id, cardData)}
+            name={column.name}
+            canCreateCard={column.canCreateCard}
+          />
+        ))}
 
-      <AddColumnButton />
-    </div>
+        <AddColumnButton onClick={() => setIsAddColumnFormOpen(true)} />
+      </div>
+
+      <AddColumnForm
+        isOpen={isAddColumnFormOpen}
+        onClose={() => setIsAddColumnFormOpen(false)}
+        onSubmit={addColumn}
+      />
+    </>
   )
 }

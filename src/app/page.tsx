@@ -1,7 +1,6 @@
 "use client"
 
 import Card from "@/components/atoms/Card";
-import { Column } from "@/components/atoms/Column";
 import { Pipeline } from "@/components/organisms/Pipeline";
 import { ItemTypes } from "@/utils/Contants";
 import Image from "next/image";
