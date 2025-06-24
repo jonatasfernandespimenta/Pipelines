@@ -15,7 +15,6 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -84,6 +83,5 @@ export default function Modal({ isOpen, onClose, title, children, className }: M
     </div>
   );
 
-  // Render modal in portal
   return createPortal(modalContent, document.body);
 }

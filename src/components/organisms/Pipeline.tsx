@@ -91,7 +91,7 @@ export function Pipeline() {
 
   const moveColumnLeft = useCallback((columnId: string) => {
     const currentIndex = columns.findIndex(col => col.id === columnId);
-    if (currentIndex <= 0) return; // Can't move left if it's the first column
+    if (currentIndex <= 0) return;
 
     const columnName = columns[currentIndex].name;
 
@@ -103,7 +103,6 @@ export function Pipeline() {
       return newColumns;
     });
 
-    // Toast notification after state update
     setTimeout(() => {
       toast.info(`Coluna "${columnName}" movida para a esquerda!`, {
         position: "top-right",
@@ -114,7 +113,7 @@ export function Pipeline() {
 
   const moveColumnRight = useCallback((columnId: string) => {
     const currentIndex = columns.findIndex(col => col.id === columnId);
-    if (currentIndex >= columns.length - 1) return; // Can't move right if it's the last column
+    if (currentIndex >= columns.length - 1) return;
 
     const columnName = columns[currentIndex].name;
 
