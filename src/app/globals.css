@@ -1,26 +1,420 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --animate-*: initial;
+  --animate-fade-in-from-bottom: fadeInFromBottom 200ms ease-out;
+  --animate-fade-out-to-top: fadeOutToTop 200ms ease-out;
+  --animate-fade: fade 200ms ease-out;
+  --animate-spin: spin 600ms linear infinite;
+  --animate-shimmer: shimmer 1s linear infinite forwards;
+  --animate-dash: dashAnimation 10s linear infinite;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --width-a4-portrait: 210mm;
+  --width-a4-landscape: 297mm;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --height-a4-portrait: 297mm;
+  --height-a4-landscape: 210mm;
+
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+  --background-image-login-background: url('/images/login_background.jpeg');
+  --background-image-shimmer: linear-gradient(
+    90deg,
+    rgba(40, 40, 40, 1) 12%,
+    rgba(80, 80, 80, 1) 40%,
+    rgba(40, 40, 40, 1) 88%
+  );
+
+  --color-brand-color-yellow: #73dda2;
+  --color-brand-color-green: #73dda2;
+  --color-brand-color-purple: #a568f3;
+  --color-selected-green: #10c9b2;
+  --color-cx-orange: #eeaa6a;
+  --color-cx-orange-light: #f5bf78;
+  --color-cx-orange-opacity: #3b3636;
+  --color-cx-blue: #56c0fb;
+  --color-cx-blue-opacity: #29313a;
+  --color-selected-green-opacity: #2a3739;
+  --color-green-background: #2a3739;
+  --color-yellow-background: #2d3739;
+  --color-orange-background: #3b3636;
+  --color-cx-white: #ffffff;
+  --color-cx-black: #272930;
+  --color-gray-01: #fafafa;
+  --color-gray-02: #9599ad;
+  --color-gray-03: #262a2f;
+  --color-gray-04: #212326;
+  --color-gray-05: #1c1c1c;
+  --color-cx-border: #2c2e35;
+  --color-support-success: #0bb07b;
+  --color-support-warning: #ffad0d;
+  --color-support-error: #ff6969;
+  --color-control: #32383e;
+  --color-support-information: #3c4c70;
+  --color-cx-success: #0ab39c;
+  --color-cx-failed: #f06548;
+  --color-cx-processing: #eeaa6a;
+  
+  /* --color-decompose-object-node: #4a3323;
+  --color-value-node: #1d293d;
+  --color-template-filler-node: #8c4a3c;
+  --color-send-mail-node: #2c6362;
+  --color-object-array-loop-node: #431e39;
+  --color-http-trigger-node: #29617d;
+  --color-script-node: #00273f;
+  --color-sum-node: #022f2e; */
+
+  --color-data-processing-nodes: #3b3b2b;
+  --color-trigger-nodes: #29617d;
+  --color-module-nodes: #8c4a3c;
+  --color-loop-nodes: #431e39;
+  --color-math-nodes: #022f2e;
+
+  --color-http-trigger-node: var(--color-trigger-nodes);
+  --color-hot-folder-trigger-node: var(--color-trigger-nodes);
+  
+  --color-decompose-object-node: var(--color-data-processing-nodes);
+  --color-mapper-node: var(--color-data-processing-nodes);
+  --color-object-merger-node: var(--color-data-processing-nodes);
+  --color-script-node: #00273f;
+  --color-sum-node: var(--color-math-nodes);
+  --color-number-condition-node: var(--color-math-nodes);
+  
+  --color-object-array-loop-node: var(--color-loop-nodes);
+  
+  --color-send-mail-node: var(--color-module-nodes);
+  --color-send-sms-node: var(--color-module-nodes);
+  --color-send-whatsapp-node: var(--color-module-nodes);
+  --color-integration-node: var(--color-module-nodes);
+  --color-template-filler-node: var(--color-module-nodes);
+  --color-sender-node: var(--color-module-nodes);
+  --color-http-request-node: var(--color-module-nodes);
+
+  --color-value-node: #1d293d;
+
+  --color-string: #fde047;
+  --color-number: #10b981;
+  --color-boolean: #6366f1;
+  --color-array: #22d3ee;
+  --color-object: #f97316;
+  --color-object-array: #db2777;
+  --color-branch: #e8fcf6;
+
+  --text-xs: 0.75rem, 1.5rem;
+  --text-2xs: 0.625rem;
+  --text-3xs: 0.5rem;
+  --text-4xs: 0.375rem;
+
+  --font-mulish: Mulish, sans-serif;
+
+  @keyframes fadeInFromBottom {
+    0% {
+      transform: translateY(2rem);
+      opacity: 0;
+    }
+    100% {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes fadeOutToTop {
+    0% {
+      transform: none;
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-2rem);
+      opacity: 0;
+    }
+  }
+  @keyframes fade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes spin {
+    0% {
+      transform: rotateZ(-360deg);
+    }
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+  @keyframes dashAnimation {
+    to {
+      stroke-dashoffset: -100;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer utilities {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+    --handle-size: 20px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    accent-color: var(--color-brand-color-green);
+    color-scheme: dark;
+  }
+
+  *::-webkit-scrollbar {
+    background-color: #262a2f;
+    width: 0.8em;
+    height: 0.8em;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background-color: #262a2f;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.33333);
+    border: 0.25em solid #262a2f;
+    border-radius: 1.25em;
+    background-clip: padding-box;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    display: none;
+    appearance: none;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    overflow-x: hidden;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .cx-color-picker {
+    appearance: none;
+    border-radius: 100px;
+  
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border-radius: 100px;
+    }
+  
+    &::-webkit-color-swatch {
+      border-radius: 100px;
+    }
+  }  
+
+  .filter-border-control {
+    --color: var(--color-control);
+    filter: drop-shadow(1px 0 0 var(--color)) drop-shadow(-1px 0 0 var(--color))
+      drop-shadow(0 1px 0 var(--color)) drop-shadow(0 -1px 0 var(--color));
+  }
+
+  .glow {
+    --color-glow: #FFFFFFAA;
+    filter: drop-shadow(0 0 0.5rem var(--color-glow));
+  }
+  
+  .clip-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+  
+  .shimmer {
+    @apply bg-shimmer bg-[length:150%] bg-[100%_0] animate-shimmer;
+  }
+  
+  .vertical-timeline-left-border {
+    @apply before:absolute before:w-[2px] before:bg-cx-blue before:left-0 before:top-0 before:bottom-0 after:w-3 after:aspect-square after:border-2 after:border-cx-blue after:rounded-full after:bg-cx-black after:absolute after:top-0 after:-left-[5px];
+  }
+  
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .reverse-column-menu-dialog {
+    flex-direction: column-reverse;
+  }
+
+  .reverse-column-menu-dialog .arrow {
+    transform: rotateZ(180deg);
+  }
+
+  .szh-menu {
+    --menu-width: auto;
+    min-width: var(--menu-width) !important;
+    border: var(--color-control) 1px solid !important;
+  }
+
+  .szh-menu__arrow {
+    border: 1px solid transparent !important;
+    border-left-color: var(--color-control) !important;
+    border-top-color: var(--color-control) !important;
+  }
+
+  .szh-menu-container,
+  .szh-menu,
+  .szh-menu__arrow {
+    @apply bg-gray-04!;
+  }
+
+  .szh-menu__item--disabled,
+  .szh-menu__item,
+  .szh-menu__item--focusable {
+    @apply bg-transparent! text-slate-100 px-4!;
+  }
+
+  .szh-menu__item--hover {
+    @apply bg-gray-03!;
+  }
+
+  .szh-menu__item--focusable {
+    @apply bg-gray-04! rounded-md;
+  }
+
+  /* -- */
+
+  .react-flow__node {
+    z-index: 2 !important;
+  }
+
+  .react-flow__handle {
+    border: none !important;
+  }
+
+  .react-flow__edgeupdater {
+    clip-path: path(
+      'M 16,0 A 16,16 0 1,1 16,32 A 16,16 0 1,1 16,0 M 16,7.5 A 8.5,8.5 0 1,0 16,24.5 A 8.5,8.5 0 1,0 16,7.5 Z'
+    );
+  }
+
+  .react-flow__edgeupdater-source {
+    transform: translateX(calc(var(--handle-size) * -1.28));
+  }
+
+  .react-flow__edgeupdater-target {
+    transform: translateX(calc(var(--handle-size) * 1.34));
+  }
+
+  .react-flow__edges {
+    z-index: 1;
+  }
+
+  .szh-menu__arrow {
+    border: 1px solid transparent !important;
+    border-left-color: var(--color-cx-border) !important;
+    border-top-color: var(--color-cx-border) !important;
+  }
+
+  .animated-path-dash {
+    stroke-dasharray: 5 5;
+    stroke-dashoffset: 0;
+    @apply animate-dash;
+  }
+
+  .whatsapp-message-dropshadow-android {
+    filter: drop-shadow(0px 1px 1.41px rgba(0, 0, 0, 0.2));
+  }
+}
+
+@utility triangle-corner-color-* {
+  background-color: --value(--color-*);
+  background-color: --value([color]);
+}
+
+@layer utilities {
+  .toast {
+    @apply bg-gray-03;
+  }
+
+  .triangle-corner-l-t {
+    --r: var(--triangle-corner-round);
+
+    width: var(--triangle-corner-size);
+    aspect-ratio: 1;
+    border-top-right-radius: var(--r);
+    clip-path: polygon(100% 100%,0 0,100% 0);
+    --_g:calc(50%*(1 + 1/tan(22.5deg)) - var(--r)/(3*sqrt(2) - 4));
+    --_r:calc(var(--r)/tan(22.5deg)),#000 98%,#0000 101%;
+    mask: radial-gradient(var(--r) at top var(--r) left var(--_r)), radial-gradient(var(--r) at right var(--r) bottom var(--_r)), conic-gradient(from 22.5deg at calc(100% - var(--_g)) var(--_g),#000 45deg,#0000 0);
+  }
+}
+
+
+@layer base {
+  @font-face {
+    font-family: 'Mulish';
+    src: url('/fonts/Mulish-VariableFont_wght.ttf') format('ttf');
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Hide scrollbar for horizontal drag scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
 }
