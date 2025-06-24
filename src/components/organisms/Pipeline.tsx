@@ -66,6 +66,9 @@ export function Pipeline() {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return
 
+    // Check if any modal is open
+    if (document.body.hasAttribute("data-modal-open")) return
+
     const target = e.target as HTMLElement
     const cardElement = target.closest('[data-card-draggable="true"]') || target.closest('.cursor-move')
 
@@ -80,6 +83,13 @@ export function Pipeline() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isScrolling || !scrollContainerRef.current) return
+    // Stop scrolling if a modal opens during drag
+    if (document.body.hasAttribute("data-modal-open")) {
+      setIsScrolling(false)
+      document.body.style.cursor = 'default'
+      document.body.style.userSelect = 'auto'
+      return
+    }
     e.preventDefault()
     const x = e.pageX - scrollContainerRef.current.offsetLeft
     const walk = (x - startX) * 2 // Scroll speed multiplier
