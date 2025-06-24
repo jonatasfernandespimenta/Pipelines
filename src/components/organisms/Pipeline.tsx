@@ -1,7 +1,7 @@
 "use client"
 
 import { ItemTypes } from "@/utils/Contants"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import Card from "../atoms/Card"
 import Column from "./Column"
 import AddColumnButton from "../molecules/AddColumnButton"
@@ -87,45 +87,52 @@ export function Pipeline() {
       pauseOnHover: true,
       draggable: true,
     });
-  }; const moveColumnLeft = (columnId: string) => {
-    setColumns(prev => {
-      const currentIndex = prev.findIndex(col => col.id === columnId);
-      if (currentIndex <= 0) return prev;
+  };
 
-      const columnName = prev[currentIndex].name;
+  const moveColumnLeft = useCallback((columnId: string) => {
+    const currentIndex = columns.findIndex(col => col.id === columnId);
+    if (currentIndex <= 0) return; // Can't move left if it's the first column
+
+    const columnName = columns[currentIndex].name;
+
+    setColumns(prev => {
       const newColumns = [...prev];
       const temp = newColumns[currentIndex];
       newColumns[currentIndex] = newColumns[currentIndex - 1];
       newColumns[currentIndex - 1] = temp;
+      return newColumns;
+    });
 
+    // Toast notification after state update
+    setTimeout(() => {
       toast.info(`Coluna "${columnName}" movida para a esquerda!`, {
         position: "top-right",
         autoClose: 1500,
       });
+    }, 0);
+  }, [columns]);
 
-      return newColumns;
-    });
-  };
+  const moveColumnRight = useCallback((columnId: string) => {
+    const currentIndex = columns.findIndex(col => col.id === columnId);
+    if (currentIndex >= columns.length - 1) return; // Can't move right if it's the last column
 
-  const moveColumnRight = (columnId: string) => {
+    const columnName = columns[currentIndex].name;
+
     setColumns(prev => {
-      const currentIndex = prev.findIndex(col => col.id === columnId);
-      if (currentIndex >= prev.length - 1) return prev;
-
-      const columnName = prev[currentIndex].name;
       const newColumns = [...prev];
       const temp = newColumns[currentIndex];
       newColumns[currentIndex] = newColumns[currentIndex + 1];
       newColumns[currentIndex + 1] = temp;
+      return newColumns;
+    });
 
+    setTimeout(() => {
       toast.info(`Coluna "${columnName}" movida para a direita!`, {
         position: "top-right",
         autoClose: 1500,
       });
-
-      return newColumns;
-    });
-  };
+    }, 0);
+  }, [columns]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return
