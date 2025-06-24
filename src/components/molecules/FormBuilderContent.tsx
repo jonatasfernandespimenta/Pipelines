@@ -80,14 +80,14 @@ const FIELD_TEMPLATES = [
 export default function FormBuilderContent() {
   return (
     <div
-      className="flex flex-col bg-gray-03 text-white overflow-y-auto"
+      className="flex flex-col bg-gray-03 text-white h-screen"
       style={{ width: '400px', padding: '24px' }}
     >
-      <h2 className="text-white text-2xl font-semibold mb-6 text-center">
+      <h2 className="text-white text-2xl font-semibold mb-6 text-center flex-shrink-0">
         Tipos de Campos
       </h2>
 
-      <div className="space-y-4 mt-4">
+      <div className="space-y-4 flex-1 overflow-y-auto pr-2">
         {FIELD_TEMPLATES.map((fieldTemplate, index) => (
           <FieldTypeContainer
             key={index}

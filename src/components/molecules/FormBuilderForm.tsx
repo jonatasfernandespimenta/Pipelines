@@ -89,16 +89,16 @@ export function FormBuilderForm() {
 
   return (
     <div
-      className="flex flex-col bg-gray-05 w-full overflow-y-auto"
+      className="flex flex-col bg-gray-05 w-full h-screen"
       style={{ padding: '32px' }}
     >
       <div
         ref={dropRef as any}
-        className={`bg-gray-04 rounded min-h-96 transition-colors ${isOver ? 'border-2 border-dashed border-cx-blue bg-gray-03' : ''
+        className={`bg-gray-04 rounded min-h-96 flex-1 overflow-y-auto transition-colors ${isOver ? 'border-2 border-dashed border-cx-blue bg-gray-03' : ''
           }`}
         style={{ padding: '32px', minWidth: '512px' }}
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 flex-shrink-0">
           <h2 className="text-white text-2xl font-semibold">Construtor de Formulário</h2>
           {formFields.length > 0 && (
             <button

@@ -61,12 +61,6 @@ export default function CreateCardForm({ onSubmit, onCancel, formFields = initia
     <form onSubmit={handleSubmit} className="space-y-4">
       {formFields.map((field) => (
         <div key={field.fieldName} className="mb-2">
-          {field.fieldType !== FieldType.Checkbox && (
-            <Text variant="label" className="block mb-2">
-              {field.fieldLabel}
-              {field.fieldRequired && <span className="text-support-error ml-1">*</span>}
-            </Text>
-          )}
           <FieldRenderer
             field={field}
             value={formData[field.fieldName]}

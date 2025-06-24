@@ -47,7 +47,7 @@ export default function Modal({ isOpen, onClose, title, children, className }: M
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#00000080] backdrop-blur-sm"
         onClick={onClose}
         onMouseDown={(e) => e.stopPropagation()}
         onMouseMove={(e) => e.stopPropagation()}
