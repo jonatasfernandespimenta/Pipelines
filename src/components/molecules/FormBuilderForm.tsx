@@ -5,6 +5,8 @@ import { FieldRenderer } from "./form-fields";
 import { FieldType } from "@/types/FieldType";
 import DraggableFormField from "./DraggableFormField";
 import DropZone from "./DropZone";
+import FieldConfigModal from "./FieldConfigModal";
+import { toast } from 'react-toastify';
 
 interface FormField {
   id: string;
@@ -19,12 +21,13 @@ interface FormField {
 export function FormBuilderForm() {
   const [formFields, setFormFields] = useState<FormField[]>([]);
   const [formValues, setFormValues] = useState<Record<string, any>>({});
+  const [editingField, setEditingField] = useState<FormField | null>(null);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: [ItemTypes.FIELD, ItemTypes.FORM_FIELD],
     drop: (item: any, monitor) => {
       if (item.fieldTemplate) {
-        // Adding a new field from the sidebar
         const newField: FormField = {
           ...item.fieldTemplate,
           id: `field-${Date.now()}-${Math.random()}`,
@@ -32,14 +35,12 @@ export function FormBuilderForm() {
         };
 
         if (item.insertIndex !== undefined) {
-          // Insert at specific position
           setFormFields(prev => {
             const newFields = [...prev];
             newFields.splice(item.insertIndex, 0, newField);
             return newFields;
           });
         } else {
-          // Add to the end
           setFormFields(prev => [...prev, newField]);
         }
       }
@@ -59,6 +60,53 @@ export function FormBuilderForm() {
 
   const removeField = (fieldId: string) => {
     setFormFields(prev => prev.filter(field => field.id !== fieldId));
+    toast.info('Campo removido com sucesso!', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const editField = (fieldId: string) => {
+    const field = formFields.find(f => f.id === fieldId);
+    if (field) {
+      setEditingField(field);
+      setIsConfigModalOpen(true);
+    }
+  };
+
+  const saveFieldConfig = (updatedField: FormField) => {
+    setFormFields(prev =>
+      prev.map(field =>
+        field.id === updatedField.id ? updatedField : field
+      )
+    );
+  };
+
+  const saveForm = () => {
+    const formData = {
+      fields: formFields.map(field => ({
+        fieldType: field.fieldType,
+        fieldName: field.fieldName,
+        fieldLabel: field.fieldLabel,
+        fieldPlaceholder: field.fieldPlaceholder,
+        fieldRequired: field.fieldRequired,
+        fieldOptions: field.fieldOptions,
+      }))
+    };
+
+    console.log('Saved Form Configuration:', JSON.stringify(formData, null, 2));
+    toast.success('Formulário salvo com sucesso! Verifique o console para ver a configuração.', {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const moveField = useCallback((dragIndex: number, hoverIndex: number) => {
@@ -100,17 +148,27 @@ export function FormBuilderForm() {
       >
         <div className="flex items-center justify-between mb-6 flex-shrink-0">
           <h2 className="text-white text-2xl font-semibold">Construtor de Formulário</h2>
-          {formFields.length > 0 && (
-            <button
-              onClick={() => {
-                setFormFields([]);
-                setFormValues({});
-              }}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-            >
-              Limpar Formulário
-            </button>
-          )}
+          <div className="flex gap-3">
+            {formFields.length > 0 && (
+              <>
+                <button
+                  onClick={saveForm}
+                  className="px-4 py-2 bg-support-success text-white rounded transition-colors hover:bg-opacity-80"
+                >
+                  Salvar Formulário
+                </button>
+                <button
+                  onClick={() => {
+                    setFormFields([]);
+                    setFormValues({});
+                  }}
+                  className="px-4 py-2 bg-support-error text-white rounded transition-colors hover:bg-opacity-80"
+                >
+                  Limpar Formulário
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {formFields.length === 0 ? (
@@ -134,6 +192,7 @@ export function FormBuilderForm() {
                   onChange={handleFieldChange}
                   onRemove={removeField}
                   onMove={moveField}
+                  onEdit={editField}
                 />
                 <DropZone
                   onDrop={handleDropZoneDrop}
@@ -142,18 +201,19 @@ export function FormBuilderForm() {
                 />
               </div>
             ))}
-
-            <div className="mt-8 pt-6 border-t border-gray-03">
-              <button
-                onClick={() => console.log('Form Data:', formValues)}
-                className="w-full py-3 bg-cx-blue text-white rounded-lg hover:bg-opacity-80 transition-colors font-medium"
-              >
-                Visualizar Dados do Formulário
-              </button>
-            </div>
           </div>
         )}
       </div>
+
+      <FieldConfigModal
+        isOpen={isConfigModalOpen}
+        field={editingField}
+        onClose={() => {
+          setIsConfigModalOpen(false);
+          setEditingField(null);
+        }}
+        onSave={saveFieldConfig}
+      />
     </div>
   )
 }

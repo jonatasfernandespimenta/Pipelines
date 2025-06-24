@@ -417,4 +417,59 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
   }
+
+  /* Custom toast styling to match the application theme */
+  .Toastify__toast-container {
+    font-family: inherit;
+  }
+
+  .Toastify__toast--default {
+    background: var(--color-gray-04);
+    color: white;
+  }
+
+  .Toastify__toast--success {
+    background: var(--color-support-success);
+    color: white;
+  }
+
+  .Toastify__toast--error {
+    background: var(--color-support-error);
+    color: white;
+  }
+
+  .Toastify__toast--warning {
+    background: var(--color-support-warning);
+    color: white;
+  }
+
+  .Toastify__toast--info {
+    background: var(--color-cx-blue);
+    color: white;
+  }
+
+  .Toastify__progress-bar--success {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .Toastify__progress-bar--error {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .Toastify__progress-bar--warning {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .Toastify__progress-bar--info {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .Toastify__close-button {
+    color: white;
+    opacity: 0.7;
+  }
+
+  .Toastify__close-button:hover {
+    opacity: 1;
+  }
 }

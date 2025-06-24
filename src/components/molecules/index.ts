@@ -7,3 +7,4 @@ export { default as Modal } from './Modal';
 export { default as CreateCardForm } from './CreateCardForm';
 export { default as DraggableFormField } from './DraggableFormField';
 export { default as DropZone } from './DropZone';
+export { default as FieldConfigModal } from './FieldConfigModal';
